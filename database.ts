@@ -3,7 +3,9 @@ import path from 'path';
 import { SweepstakeState, Participant, TeamStats, Match } from './src/types';
 import { WORLD_CUP_TEAMS } from './src/teamsData';
 
-const DB_PATH = path.join(process.cwd(), 'sweepstake.db');
+// Use /data volume on Railway (persistent), fall back to cwd locally
+const DB_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.cwd();
+const DB_PATH = path.join(DB_DIR, 'sweepstake.db');
 
 let db: Database.Database | null = null;
 
