@@ -492,7 +492,7 @@ export default function App() {
             <TeamsGrid state={state} />
           )}
           {activeTab === 'collectiv' && (
-            <CollectivPanel state={state} onTogglePayment={handleTogglePayment} />
+            <CollectivPanel state={state} />
           )}
           {activeTab === 'admin' && (
             <AdminPanel

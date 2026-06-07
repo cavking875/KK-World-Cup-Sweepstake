@@ -4,10 +4,9 @@ import { Link, Copy, Check, PiggyBank, Award, Users } from 'lucide-react';
 
 interface CollectivPanelProps {
   state: SweepstakeState;
-  onTogglePayment: (id: string, currentStatus: boolean) => void;
 }
 
-export const CollectivPanel: React.FC<CollectivPanelProps> = ({ state, onTogglePayment }) => {
+export const CollectivPanel: React.FC<CollectivPanelProps> = ({ state }) => {
   const { collectiv, participants } = state;
   const [copied, setCopied] = useState(false);
 
@@ -148,16 +147,13 @@ export const CollectivPanel: React.FC<CollectivPanelProps> = ({ state, onToggleP
                   <span className={`h-2 w-2 rounded-full shrink-0 ${p.hasPaid ? 'bg-green-400' : 'bg-rose-400'}`} />
                   <span className="text-sm font-display font-bold text-white truncate">{p.name}</span>
                 </div>
-                <button
-                  onClick={() => onTogglePayment(p.id, p.hasPaid)}
-                  className={`text-xs font-display font-bold px-3 py-1 rounded-lg transition-all shrink-0 cursor-pointer ${
+                <span className={`text-xs font-display font-bold px-3 py-1 rounded-lg shrink-0 ${
                     p.hasPaid
-                      ? 'bg-green-800/40 text-green-300 hover:bg-rose-900/40 hover:text-rose-300'
-                      : 'bg-white/5 text-slate-400 hover:bg-green-800/40 hover:text-green-300'
-                  }`}
-                >
+                      ? 'bg-green-800/40 text-green-300'
+                      : 'bg-white/5 text-slate-500'
+                  }`}>
                   {p.hasPaid ? `${formatMoney(collectiv.entryFee)} Paid` : 'Unpaid'}
-                </button>
+                </span>
               </div>
             ))}
           </div>
