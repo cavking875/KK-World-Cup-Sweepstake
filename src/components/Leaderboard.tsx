@@ -4,7 +4,6 @@ import { Medal, Shield, Crown, TrendingUp, Info } from 'lucide-react';
 
 interface LeaderboardProps {
   state: SweepstakeState;
-  onTogglePayment: (id: string, currentStatus: boolean) => void;
 }
 
 // Helper to evaluate a team's sweepstake progression stats
@@ -62,7 +61,7 @@ export function getTeamSweepstakeStats(
   };
 }
 
-export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment }) => {
+export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
   const { participants, stats, teams, collectiv, winnerTeamId, runnerUpTeamId, worstTeamId } = state;
 
   // Let's build rows based on each participant's best-scoring team progress
@@ -209,16 +208,15 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
               <tr className="border-b border-white/5 text-slate-500 text-xs uppercase tracking-wider font-semibold">
                 <th className="py-3 px-3 text-center w-12">#</th>
                 <th className="py-3 px-4">Player</th>
-                <th className="py-3 px-4">Teams</th>
+                <th className="py-3 px-4 hidden sm:table-cell">Teams</th>
                 <th className="py-3 px-3 text-center w-16 hidden sm:table-cell">GD</th>
                 <th className="py-3 px-3 text-center w-20 border-l border-white/5">Score</th>
-                <th className="py-3 px-3 sm:px-4 text-center w-20 sm:w-28">Paid</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {sortedRows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-500 text-sm">
+                  <td colSpan={4} className="py-12 text-center text-slate-500 text-sm">
                     No participants yet - head to the Admin tab to get started
                   </td>
                 </tr>
@@ -261,8 +259,8 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
                         </div>
                       </td>
 
-                      {/* Teams */}
-                      <td className="py-4 px-4">
+                      {/* Teams - hidden on mobile */}
+                      <td className="py-4 px-4 hidden sm:table-cell">
                         <div className="flex flex-wrap gap-1.5">
                           {row.teamStatsList.length === 0 ? (
                             <span className="text-xs text-slate-500 italic">No teams drawn yet</span>
@@ -300,7 +298,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
                         </div>
                       </td>
 
-                      {/* Goal difference */}
+                      {/* Score */}
                       <td className="py-4 px-3 text-center font-mono text-sm font-bold hidden sm:table-cell">
                         <span className={row.totalGoalDifference > 0 ? 'text-green-400' : row.totalGoalDifference < 0 ? 'text-rose-400' : 'text-slate-500'}>
                           {row.totalGoalDifference > 0 ? `+${row.totalGoalDifference}` : row.totalGoalDifference}
@@ -313,22 +311,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
                           {row.totalPoints}
                         </span>
                         <div className="text-[10px] text-slate-600 font-semibold uppercase tracking-wide">pts</div>
-                      </td>
-
-                      {/* Payment */}
-                      <td className="py-4 px-3 sm:px-4 text-center">
-                        <button
-                          onClick={() => onTogglePayment(row.participantId, row.hasPaid)}
-                          className={`inline-flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all border cursor-pointer ${
-                            row.hasPaid
-                              ? 'bg-green-900/30 border-green-700/40 text-green-400 hover:bg-green-800/40'
-                              : 'bg-rose-950/30 border-rose-900/40 text-rose-400 hover:bg-rose-900/30'
-                          }`}
-                        >
-                          <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${row.hasPaid ? 'bg-green-400' : 'bg-rose-400'}`} />
-                          <span className="hidden sm:inline">{row.hasPaid ? 'Paid' : 'Unpaid'}</span>
-                          <span className="sm:hidden">{row.hasPaid ? '✓' : '✗'}</span>
-                        </button>
                       </td>
                     </tr>
                   );

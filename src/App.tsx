@@ -483,7 +483,7 @@ export default function App() {
         {/* Tab content */}
         <main className="flex-1">
           {activeTab === 'leaderboard' && (
-            <Leaderboard state={state} onTogglePayment={handleTogglePayment} />
+            <Leaderboard state={state} />
           )}
           {activeTab === 'matches' && (
             <MatchesList state={state} />

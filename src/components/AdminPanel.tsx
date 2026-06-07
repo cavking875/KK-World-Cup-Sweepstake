@@ -160,6 +160,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   )}
 
                   <div className="flex items-center gap-1 shrink-0">
+                    {!isEditing && (
+                      <button
+                        onClick={() => onUpdateParticipants('edit', { ...p, hasPaid: !p.hasPaid })}
+                        className={`text-xs font-bold px-2 py-1 rounded-lg transition-all cursor-pointer ${
+                          p.hasPaid
+                            ? 'bg-green-800/40 text-green-300 hover:bg-rose-900/40 hover:text-rose-300'
+                            : 'bg-white/5 text-slate-500 hover:bg-green-800/40 hover:text-green-300'
+                        }`}
+                        title="Toggle payment status"
+                      >
+                        {p.hasPaid ? '£ Paid' : 'Unpaid'}
+                      </button>
+                    )}
                     {isEditing ? (
                       <button
                         onClick={() => handleSaveEdit(p.id)}
