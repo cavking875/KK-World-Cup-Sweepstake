@@ -5,7 +5,7 @@ import { MatchesList } from './components/MatchesList';
 import { TeamsGrid } from './components/TeamsGrid';
 import { CollectivPanel } from './components/CollectivPanel';
 import { AdminPanel } from './components/AdminPanel';
-import { Trophy, HelpCircle, Activity, Wallet, Settings, RefreshCw, LayoutGrid, Wifi, WifiOff, Shuffle } from 'lucide-react';
+import { HelpCircle, RefreshCw, Wifi, WifiOff } from 'lucide-react';
 import { LiveDraw } from './components/LiveDraw';
 
 interface SyncStatus {
@@ -311,12 +311,12 @@ export default function App() {
   const paidCount = state.participants.filter(p => p.hasPaid).length;
 
   const tabs: { key: typeof activeTab; label: string; icon: ReactNode; disabled?: boolean; highlight?: boolean }[] = [
-    { key: 'leaderboard', label: 'Leaderboard', icon: <Trophy className="h-4 w-4" /> },
-    { key: 'matches', label: 'Matches', icon: <Activity className="h-4 w-4" />, disabled: state.status === 'setup' },
-    { key: 'groups', label: 'Teams', icon: <LayoutGrid className="h-4 w-4" /> },
-    { key: 'collectiv', label: 'Pot', icon: <Wallet className="h-4 w-4" /> },
+    { key: 'leaderboard', label: 'Leaderboard', icon: <span className="text-base leading-none">🏆</span> },
+    { key: 'matches', label: 'Matches', icon: <span className="text-base leading-none">⚽</span>, disabled: state.status === 'setup' },
+    { key: 'groups', label: 'Teams', icon: <span className="text-base leading-none">🌍</span> },
+    { key: 'collectiv', label: 'Pot', icon: <span className="text-base leading-none">💰</span> },
     { key: 'draw', label: 'Live Draw', icon: <span className="text-base leading-none">🎰</span>, highlight: true },
-    { key: 'admin', label: 'Admin', icon: <Settings className="h-4 w-4" /> },
+    { key: 'admin', label: 'Admin', icon: <span className="text-base leading-none">⚙️</span> },
   ];
 
   return (
@@ -336,15 +336,15 @@ export default function App() {
           style={{ background: 'linear-gradient(135deg, #0f2318 0%, #061410 60%, #0a1c10 100%)' }}>
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #22c55e 0%, transparent 50%), radial-gradient(circle at 80% 50%, #f5c518 0%, transparent 50%)' }} />
-          <div className="relative p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
-            <div className="flex items-center gap-5">
+          <div className="relative p-6 flex flex-col md:flex-row items-center md:items-center justify-between gap-5">
+            <div className="flex items-center gap-5 w-full md:w-auto justify-center md:justify-start">
               <div className="text-6xl drop-shadow-2xl select-none">🏆</div>
-              <div>
+              <div className="text-center md:text-left">
                 <h1 className="text-3xl md:text-4xl font-display font-black text-white leading-none tracking-tight">
                   World Cup 2026
                 </h1>
                 <p className="text-sm font-display font-bold text-green-400 mt-1 tracking-wider uppercase">
-                  Sweepstake - Discord Group
+                  Sweepstake
                 </p>
                 <p className="text-xs text-slate-400 mt-1.5">
                   60% Winner · 25% Runner-Up · 15% Wooden Spoon

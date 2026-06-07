@@ -201,41 +201,6 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
         )}
       </div>
 
-      {/* Prize cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 p-5"
-          style={{ background: 'linear-gradient(135deg, #2d1a00 0%, #1a1100 100%)' }}>
-          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥇</div>
-          <div className="relative">
-            <div className="text-3xl mb-2">🥇</div>
-            <div className="text-xs text-amber-400/70 uppercase tracking-widest font-semibold mb-0.5">Winner - 60%</div>
-            <div className="text-2xl font-display font-black text-amber-300">{formatMoney(firstPrize)}</div>
-            <div className="text-xs text-slate-500 mt-1">Team that wins the World Cup final</div>
-          </div>
-        </div>
-
-        <div className="relative overflow-hidden rounded-2xl border border-slate-600/30 p-5 bg-[#161b22]">
-          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥈</div>
-          <div className="relative">
-            <div className="text-3xl mb-2">🥈</div>
-            <div className="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-0.5">Runner-Up - 25%</div>
-            <div className="text-2xl font-display font-black text-slate-200">{formatMoney(secondPrize)}</div>
-            <div className="text-xs text-slate-500 mt-1">Team that loses the World Cup final</div>
-          </div>
-        </div>
-
-        <div className="relative overflow-hidden rounded-2xl border border-rose-900/40 p-5"
-          style={{ background: 'linear-gradient(135deg, #1a0808 0%, #0d0606 100%)' }}>
-          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥄</div>
-          <div className="relative">
-            <div className="text-3xl mb-2">🥄</div>
-            <div className="text-xs text-rose-400/70 uppercase tracking-widest font-semibold mb-0.5">Wooden Spoon - 15%</div>
-            <div className="text-2xl font-display font-black text-rose-400">{formatMoney(lastPrize)}</div>
-            <div className="text-xs text-slate-500 mt-1">Worst team by points and goal difference</div>
-          </div>
-        </div>
-      </div>
-
       {/* Leaderboard table */}
       <div className="bg-[#161b22] border border-white/5 rounded-2xl overflow-hidden">
         <div className="overflow-x-auto">
@@ -421,6 +386,41 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state, onTogglePayment
           </div>
         </div>
 
+      </div>
+
+      {/* Prize breakdown */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="relative overflow-hidden rounded-2xl border border-amber-500/30 p-5"
+          style={{ background: 'linear-gradient(135deg, #2d1a00 0%, #1a1100 100%)' }}>
+          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥇</div>
+          <div className="relative">
+            <div className="text-3xl mb-2">🥇</div>
+            <div className="text-xs text-amber-400/70 uppercase tracking-widest font-semibold mb-0.5">Winner - 60%</div>
+            <div className="text-2xl font-display font-black text-amber-300">{formatMoney(firstPrize)}</div>
+            <div className="text-xs text-slate-500 mt-1">Team that wins the World Cup final</div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-slate-600/30 p-5 bg-[#161b22]">
+          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥈</div>
+          <div className="relative">
+            <div className="text-3xl mb-2">🥈</div>
+            <div className="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-0.5">Runner-Up - 25%</div>
+            <div className="text-2xl font-display font-black text-slate-200">{formatMoney(secondPrize)}</div>
+            <div className="text-xs text-slate-500 mt-1">Team that loses the World Cup final</div>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-rose-900/40 p-5"
+          style={{ background: 'linear-gradient(135deg, #1a0808 0%, #0d0606 100%)' }}>
+          <div className="absolute top-0 right-0 text-6xl opacity-10 leading-none select-none">🥄</div>
+          <div className="relative">
+            <div className="text-3xl mb-2">🥄</div>
+            <div className="text-xs text-rose-400/70 uppercase tracking-widest font-semibold mb-0.5">Wooden Spoon - 15%</div>
+            <div className="text-2xl font-display font-black text-rose-400">{formatMoney(lastPrize)}</div>
+            <div className="text-xs text-slate-500 mt-1">Worst team by points and goal difference</div>
+          </div>
+        </div>
       </div>
     </div>
   );
