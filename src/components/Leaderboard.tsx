@@ -246,15 +246,37 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
                         )}
                       </td>
 
-                      {/* Player name */}
-                      <td className="py-4 px-4">
-                        <div className="flex flex-col">
+                      {/* Player name + teams on mobile */}
+                      <td className="py-3 px-4">
+                        <div className="flex flex-col gap-1">
                           <span className="font-display font-bold text-white text-base flex items-center gap-1.5">
                             {row.participantName}
                             {isWinnerPrize && <Crown className="h-3.5 w-3.5 text-amber-400 fill-amber-400/30" />}
                           </span>
                           {holdsWorstTeam && (
-                            <span className="text-[10px] text-rose-400 mt-0.5 font-semibold">🥄 Wooden Spoon</span>
+                            <span className="text-[10px] text-rose-400 font-semibold">🥄 Wooden Spoon</span>
+                          )}
+                          {/* Teams shown inline on mobile */}
+                          {row.teamStatsList.length > 0 && (
+                            <div className="flex flex-wrap gap-1 sm:hidden">
+                              {row.teamStatsList.map((t, tid) => {
+                                const isChampTeam = t.stage === 'completed';
+                                const isSpecificWorst = worstTeamId && (t as any).teamId === worstTeamId;
+                                const isBestTeam = (row as any).bestTeamId === (t as any).teamId;
+                                return (
+                                  <span key={tid} className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold border ${
+                                    isChampTeam ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                                    : isSpecificWorst ? 'bg-rose-950/50 border-rose-900/50 text-rose-400'
+                                    : t.isEliminated ? 'bg-transparent border-white/5 text-slate-600'
+                                    : isBestTeam ? 'bg-green-900/40 border-green-700/40 text-green-300'
+                                    : 'bg-white/5 border-white/8 text-slate-300'
+                                  }`}>
+                                    <span>{(t as any).flag}</span>
+                                    <span className={t.isEliminated ? 'line-through opacity-50' : ''}>{t.teamCode}</span>
+                                  </span>
+                                );
+                              })}
+                            </div>
                           )}
                         </div>
                       </td>
