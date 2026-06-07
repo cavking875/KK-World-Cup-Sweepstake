@@ -104,7 +104,7 @@ async function syncLiveScores(): Promise<{ updated: number; message: string }> {
     const data = await response.json() as any;
     const apiMatches: any[] = data.matches || [];
 
-    const state = loadState();
+    const state = await loadState();
     if (state.status === 'setup') {
       lastSyncStatus = "ok";
       lastSyncMessage = "Tournament not started yet";
@@ -156,7 +156,7 @@ async function syncLiveScores(): Promise<{ updated: number; message: string }> {
 
     if (updatedCount > 0) {
       reconcileStagesAndAdvance(state);
-      saveState(state);
+      await saveState(state);
     }
 
     lastSyncTime = new Date();
@@ -334,22 +334,22 @@ function autoDraftTeams(state: SweepstakeState) {
 }
 
 // Load and Save Persistent state
-function loadState(): SweepstakeState {
+async function loadState(): Promise<SweepstakeState> {
   try {
-    if (hasExistingState()) {
-      return dbLoadState();
+    if (await hasExistingState()) {
+      return await dbLoadState();
     }
   } catch (error) {
     console.error("Failed to load state from database, creating fresh initial state:", error);
   }
   const fresh = buildInitialState();
-  saveState(fresh);
+  await saveState(fresh);
   return fresh;
 }
 
-function saveState(state: SweepstakeState) {
+async function saveState(state: SweepstakeState): Promise<void> {
   try {
-    dbSaveState(state);
+    await dbSaveState(state);
   } catch (error) {
     console.error("Failed to save state to database:", error);
   }
@@ -865,21 +865,21 @@ async function startServer() {
   app.use(express.json());
 
   // SSE/Websocket setup could be done but a frequent poll is highly robust and operates on standard Express
-  app.get("/api/sweepstake/state", (req, res) => {
-    let state = loadState();
+  app.get("/api/sweepstake/state", async (req, res) => {
+    let state = await loadState();
     reconcileStagesAndAdvance(state);
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
-  app.post("/api/sweepstake/reset", (req, res) => {
+  app.post("/api/sweepstake/reset", async (req, res) => {
     const cleanState = buildInitialState();
-    saveState(cleanState);
+    await saveState(cleanState);
     res.json(cleanState);
   });
 
-  app.post("/api/sweepstake/participants", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/participants", async (req, res) => {
+    const state = await loadState();
     const { action, participant } = req.body;
 
     if (action === "add" && participant) {
@@ -901,12 +901,12 @@ async function startServer() {
     }
 
     reconcileStagesAndAdvance(state);
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
-  app.post("/api/sweepstake/collectiv", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/collectiv", async (req, res) => {
+    const state = await loadState();
     const { entryFee, link, currency } = req.body;
 
     state.collectiv.entryFee = Number(entryFee) || 10;
@@ -914,12 +914,12 @@ async function startServer() {
     state.collectiv.currency = currency || "GBP";
     state.collectiv.totalPotValue = state.participants.length * state.collectiv.entryFee;
 
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
-  app.post("/api/sweepstake/payment-status", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/payment-status", async (req, res) => {
+    const state = await loadState();
     const { participantId, hasPaid } = req.body;
 
     const idx = state.participants.findIndex(p => p.id === participantId);
@@ -927,7 +927,7 @@ async function startServer() {
       state.participants[idx].hasPaid = !!hasPaid;
     }
 
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
@@ -940,23 +940,23 @@ async function startServer() {
     }
   });
 
-  app.post("/api/sweepstake/redraft", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/redraft", async (req, res) => {
+    const state = await loadState();
     autoDraftTeams(state);
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
-  app.post("/api/sweepstake/start-competition", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/start-competition", async (req, res) => {
+    const state = await loadState();
     state.status = 'active';
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
   // Manual Override match scores
-  app.post("/api/sweepstake/match-override", (req, res) => {
-    const state = loadState();
+  app.post("/api/sweepstake/match-override", async (req, res) => {
+    const state = await loadState();
     const { matchId, homeScore, awayScore, penaltyWinnerId } = req.body;
 
     const match = state.matches.find(m => m.id === matchId);
@@ -971,13 +971,13 @@ async function startServer() {
     }
 
     reconcileStagesAndAdvance(state);
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
 
   // Simulate Next Match (either single, round, or bulk)
   app.post("/api/sweepstake/simulate", async (req, res) => {
-    const state = loadState();
+    const state = await loadState();
     const { mode } = req.body; // 'next', 'round', 'all'
 
     // Get unplayed matches
@@ -1086,11 +1086,9 @@ Generate a JSON response of the following model schema:
     }
 
     reconcileStagesAndAdvance(state);
-    saveState(state);
+    await saveState(state);
     res.json(state);
   });
-
-  // Manual sync trigger + sync status endpoint
   app.post("/api/sweepstake/sync-scores", async (req, res) => {
     const result = await syncLiveScores();
     res.json({
