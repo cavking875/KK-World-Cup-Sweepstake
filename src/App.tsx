@@ -325,7 +325,8 @@ export default function App() {
       {/* Top bar */}
       <div className="bg-gradient-to-r from-green-950 via-[#0f3d1e] to-green-950 border-b border-green-900/30 py-2 px-4 flex items-center justify-center gap-2 text-xs font-display font-semibold tracking-widest text-green-400 uppercase select-none shrink-0">
         <span>⚽</span>
-        <span>FIFA World Cup 2026 - USA · Canada · Mexico</span>
+        <span className="hidden sm:inline">FIFA World Cup 2026 - USA · Canada · Mexico</span>
+        <span className="sm:hidden">FIFA World Cup 2026</span>
         <span>⚽</span>
       </div>
 
@@ -336,8 +337,8 @@ export default function App() {
           style={{ background: 'linear-gradient(135deg, #0f2318 0%, #061410 60%, #0a1c10 100%)' }}>
           <div className="absolute inset-0 opacity-10"
             style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #22c55e 0%, transparent 50%), radial-gradient(circle at 80% 50%, #f5c518 0%, transparent 50%)' }} />
-          <div className="relative p-6 flex flex-col md:flex-row items-center md:items-center justify-between gap-5">
-            <div className="flex items-center gap-5 w-full md:w-auto justify-center md:justify-start">
+          <div className="relative p-6 flex flex-col md:flex-row items-center justify-center md:justify-between gap-5">
+            <div className="flex items-center gap-5 justify-center md:justify-start">
               <div className="text-6xl drop-shadow-2xl select-none">🏆</div>
               <div className="text-center md:text-left">
                 <h1 className="text-3xl md:text-4xl font-display font-black text-white leading-none tracking-tight">
@@ -352,30 +353,30 @@ export default function App() {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <div className="bg-black/40 border border-green-900/40 rounded-xl px-4 py-3 min-w-[90px]">
-                <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Paid In</div>
-                <div className="font-display font-black text-lg text-amber-400 leading-none">
-                  {paidCount}<span className="text-slate-500 font-semibold text-sm">/{state.participants.length}</span>
+            <div className="flex flex-wrap gap-3 justify-center md:justify-end">
+              <div className="bg-black/40 border border-green-900/40 rounded-xl px-3 py-2 min-w-[75px]">
+                <div className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Paid In</div>
+                <div className="font-display font-black text-base text-amber-400 leading-none">
+                  {paidCount}<span className="text-slate-500 font-semibold text-xs">/{state.participants.length}</span>
                 </div>
               </div>
 
               {state.collectiv.entryFee > 0 && state.participants.length > 0 && (
-                <div className="bg-black/40 border border-amber-900/30 rounded-xl px-4 py-3 min-w-[90px]">
-                  <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Total Pot</div>
-                  <div className="font-display font-black text-lg text-amber-300 leading-none">
+                <div className="bg-black/40 border border-amber-900/30 rounded-xl px-3 py-2 min-w-[75px]">
+                  <div className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Total Pot</div>
+                  <div className="font-display font-black text-base text-amber-300 leading-none">
                     {state.collectiv.currency}{(state.participants.length * state.collectiv.entryFee).toFixed(0)}
                   </div>
                 </div>
               )}
 
               {/* Live sync status badge */}
-              <div className={`bg-black/40 border rounded-xl px-4 py-3 min-w-[110px] ${
+              <div className={`bg-black/40 border rounded-xl px-3 py-2 min-w-[80px] ${
                 syncStatus?.apiKeyConfigured
                   ? syncStatus.lastSyncStatus === 'ok' ? 'border-green-900/40' : 'border-rose-900/30'
                   : 'border-white/5'
               }`}>
-                <div className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Live Scores</div>
+                <div className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold mb-1">Live Scores</div>
                 <div className="flex items-center gap-1.5">
                   {syncStatus?.apiKeyConfigured ? (
                     syncStatus.lastSyncStatus === 'ok' ? (

@@ -83,45 +83,45 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
 
         {/* Current match spotlight */}
         {currentLiveMatch && (
-          <div className="mt-6 bg-black/30 border border-white/8 rounded-xl p-5">
+            <div className="mt-6 bg-black/30 border border-white/8 rounded-xl p-4">
             <div className="text-center text-[10px] font-display font-bold text-green-400 uppercase tracking-widest mb-1">
               {currentLiveMatch.isPlayed ? 'Last Played' : 'Up Next'} - {getStageLabel(currentLiveMatch.stage, currentLiveMatch.group)}
             </div>
             {currentLiveMatch.date && (
-              <div className="text-center text-[11px] text-slate-500 font-semibold mb-4">
+              <div className="text-center text-[11px] text-slate-500 font-semibold mb-3">
                 {currentLiveMatch.date} BST
               </div>
             )}
 
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-3">
               {/* Home team */}
-              <div className="text-right flex-1">
-                <div className="text-4xl mb-1">{getTeamObj(currentLiveMatch.homeTeamId)?.flag}</div>
-                <div className="font-display font-black text-lg text-white">{getTeamObj(currentLiveMatch.homeTeamId)?.name}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{getOwnerName(currentLiveMatch.homeTeamId)}</div>
+              <div className="text-right flex-1 min-w-0">
+                <div className="text-3xl mb-1">{getTeamObj(currentLiveMatch.homeTeamId)?.flag}</div>
+                <div className="font-display font-black text-sm text-white truncate">{getTeamObj(currentLiveMatch.homeTeamId)?.name}</div>
+                <div className="text-xs text-slate-500 mt-0.5 truncate">{getOwnerName(currentLiveMatch.homeTeamId)}</div>
               </div>
 
               {/* Score box */}
-              <div className="flex flex-col items-center">
-                <div className="bg-[#161b22] border border-white/10 rounded-xl px-5 py-3 min-w-[100px] text-center">
-                  <span className="font-display font-black text-2xl tracking-widest text-white">
+              <div className="flex flex-col items-center shrink-0">
+                <div className="bg-[#161b22] border border-white/10 rounded-xl px-4 py-2 min-w-[80px] text-center">
+                  <span className="font-display font-black text-xl tracking-widest text-white">
                     {currentLiveMatch.isPlayed
                       ? `${currentLiveMatch.homeScore} - ${currentLiveMatch.awayScore}`
                       : 'VS'}
                   </span>
                 </div>
                 {currentLiveMatch.isPlayed && currentLiveMatch.penaltyWinnerId && (
-                  <span className="text-[10px] text-amber-400 font-semibold mt-2 uppercase">
+                  <span className="text-[10px] text-amber-400 font-semibold mt-1 uppercase">
                     {getTeamObj(currentLiveMatch.penaltyWinnerId)?.code} wins on pens
                   </span>
                 )}
               </div>
 
               {/* Away team */}
-              <div className="text-left flex-1">
-                <div className="text-4xl mb-1">{getTeamObj(currentLiveMatch.awayTeamId)?.flag}</div>
-                <div className="font-display font-black text-lg text-white">{getTeamObj(currentLiveMatch.awayTeamId)?.name}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{getOwnerName(currentLiveMatch.awayTeamId)}</div>
+              <div className="text-left flex-1 min-w-0">
+                <div className="text-3xl mb-1">{getTeamObj(currentLiveMatch.awayTeamId)?.flag}</div>
+                <div className="font-display font-black text-sm text-white truncate">{getTeamObj(currentLiveMatch.awayTeamId)?.name}</div>
+                <div className="text-xs text-slate-500 mt-0.5 truncate">{getOwnerName(currentLiveMatch.awayTeamId)}</div>
               </div>
             </div>
 

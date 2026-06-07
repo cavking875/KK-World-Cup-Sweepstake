@@ -67,9 +67,9 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
                     <tr className="text-slate-600 font-display font-semibold text-[10px] uppercase tracking-widest border-b border-white/5">
                       <th className="py-2 pr-2">Team</th>
                       <th className="py-2 text-center w-8">P</th>
-                      <th className="py-2 text-center w-8">W</th>
-                      <th className="py-2 text-center w-8">D</th>
-                      <th className="py-2 text-center w-8">L</th>
+                      <th className="py-2 text-center w-8 hidden sm:table-cell">W</th>
+                      <th className="py-2 text-center w-8 hidden sm:table-cell">D</th>
+                      <th className="py-2 text-center w-8 hidden sm:table-cell">L</th>
                       <th className="py-2 text-center w-10">GD</th>
                       <th className="py-2 text-center w-10">Pts</th>
                     </tr>
@@ -96,7 +96,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
                               {/* Position counter */}
                               <span className="font-mono font-medium text-[10px] text-slate-500 w-3 text-center">{idx + 1}</span>
                               <span className="text-xl" title={team.name}>{team.flag}</span>
-                              <div className="flex flex-col truncate max-w-[140px]">
+                              <div className="flex flex-col truncate max-w-[90px] sm:max-w-[140px]">
                                 <span className={`font-display font-bold text-sm ${isWinner ? 'text-amber-300' : isRunnerUp ? 'text-slate-300' : 'text-slate-200'}`}>
                                   {team.name}
                                 </span>
@@ -124,13 +124,13 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
                           <td className="py-2.5 text-center font-mono font-medium text-slate-300">
                             {tStats.played}
                           </td>
-                          <td className="py-2.5 text-center font-mono text-slate-400">
+                          <td className="py-2.5 text-center font-mono text-slate-400 hidden sm:table-cell">
                             {tStats.won}
                           </td>
-                          <td className="py-2.5 text-center font-mono text-slate-450 text-slate-500">
+                          <td className="py-2.5 text-center font-mono text-slate-450 text-slate-500 hidden sm:table-cell">
                             {tStats.drawn}
                           </td>
-                          <td className="py-2.5 text-center font-mono text-slate-400">
+                          <td className="py-2.5 text-center font-mono text-slate-400 hidden sm:table-cell">
                             {tStats.lost}
                           </td>
                           <td className="py-2.5 text-center font-mono">
