@@ -14,6 +14,7 @@ body {
   background-color: #0d1117;
   color: #f0f6fc;
   font-family: var(--font-sans);
+  overflow-x: hidden;
 }
 
 /* Custom gorgeous scrollbar */

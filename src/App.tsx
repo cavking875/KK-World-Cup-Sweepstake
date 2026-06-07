@@ -320,7 +320,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d1117] text-slate-100 flex flex-col antialiased">
+    <div className="min-h-screen bg-[#0d1117] text-slate-100 flex flex-col antialiased overflow-x-hidden">
 
       {/* Top bar */}
       <div className="bg-gradient-to-r from-green-950 via-[#0f3d1e] to-green-950 border-b border-green-900/30 py-2 px-4 flex items-center justify-center gap-2 text-xs font-display font-semibold tracking-widest text-green-400 uppercase select-none shrink-0">
