@@ -341,14 +341,16 @@ export default function App() {
             <div className="flex items-center gap-5 justify-center md:justify-start">
               <div className="text-6xl drop-shadow-2xl select-none">🏆</div>
               <div className="text-center md:text-left">
-                <h1 className="text-3xl md:text-4xl font-display font-black text-white leading-none tracking-tight">
-                  World Cup 2026
+                <h1 className="text-2xl md:text-4xl font-display font-black text-white leading-none tracking-tight">
+                  Keyboard Kelly's
                 </h1>
-                <p className="text-sm font-display font-bold text-green-400 mt-1 tracking-wider uppercase">
-                  Sweepstake
-                </p>
-                <p className="text-xs text-slate-400 mt-1.5">
-                  60% Winner · 25% Runner-Up · 15% Wooden Spoon
+                <h2 className="text-lg md:text-2xl font-display font-black text-green-400 leading-tight tracking-tight mt-0.5">
+                  World Cup Sweepstake
+                </h2>
+                <p className="text-[10px] text-slate-500 mt-1.5 flex flex-wrap gap-x-2">
+                  <span>🥇 60% Winner</span>
+                  <span>🥈 25% Runner-Up</span>
+                  <span>🥄 15% Wooden Spoon</span>
                 </p>
               </div>
             </div>
