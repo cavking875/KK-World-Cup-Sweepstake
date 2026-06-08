@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SweepstakeState, Team, TeamStats } from '../types';
 import { LayoutGrid } from 'lucide-react';
 
@@ -8,6 +8,7 @@ interface TeamsGridProps {
 
 export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
   const { teams, stats, participants, worstTeamId, winnerTeamId, runnerUpTeamId } = state;
+  const [view, setView] = useState<'groups' | 'players'>('groups');
 
   const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
 
@@ -26,17 +27,88 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h2 className="text-2xl font-display font-black text-white flex items-center gap-2 tracking-tight">
-          <LayoutGrid className="h-6 w-6 text-green-400" />
-          Tournament Groups
-        </h2>
-        <p className="text-sm text-slate-400 mt-1">
-          All 12 groups - track standings and see who owns each nation
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 className="text-2xl font-display font-black text-white flex items-center gap-2 tracking-tight">
+            <LayoutGrid className="h-6 w-6 text-green-400" />
+            Teams
+          </h2>
+          <p className="text-sm text-slate-400 mt-1">
+            {view === 'groups' ? 'All 12 groups - track standings and see who owns each nation' : 'Each player and their assigned teams'}
+          </p>
+        </div>
+        <div className="flex gap-1 p-1 bg-[#161b22] rounded-xl border border-white/5 self-start">
+          <button
+            onClick={() => setView('groups')}
+            className={`px-4 py-1.5 rounded-lg text-sm font-display font-semibold transition-all cursor-pointer ${
+              view === 'groups' ? 'bg-green-800/60 text-green-300 border border-green-700/40' : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            🌍 Groups
+          </button>
+          <button
+            onClick={() => setView('players')}
+            className={`px-4 py-1.5 rounded-lg text-sm font-display font-semibold transition-all cursor-pointer ${
+              view === 'players' ? 'bg-green-800/60 text-green-300 border border-green-700/40' : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            👤 Players
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {view === 'players' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {participants.length === 0 ? (
+            <div className="col-span-3 text-center text-slate-500 text-sm py-12">No players added yet</div>
+          ) : (
+            participants.map(p => {
+              const assignedTeams = teams.filter(t => p.assignedTeamIds.includes(t.id));
+              return (
+                <div key={p.id} className="bg-[#161b22] border border-white/5 rounded-2xl p-4">
+                  <div className="font-display font-black text-white text-base mb-3 pb-2 border-b border-white/5">
+                    {p.name}
+                    <span className="ml-2 text-xs text-slate-500 font-semibold">{assignedTeams.length} teams</span>
+                  </div>
+                  {assignedTeams.length === 0 ? (
+                    <p className="text-xs text-slate-600 italic">No teams assigned yet</p>
+                  ) : (
+                    <div className="flex flex-wrap gap-2">
+                      {assignedTeams.map(t => {
+                        const s = getTeamStats(t.id);
+                        const isChamp = winnerTeamId === t.id;
+                        const isRunnerUp = runnerUpTeamId === t.id;
+                        const isWorst = worstTeamId === t.id;
+                        const isEliminated = s.stage === 'eliminated';
+                        return (
+                          <div key={t.id} className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs ${
+                            isChamp ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
+                            : isRunnerUp ? 'bg-sky-500/10 border-sky-500/30 text-sky-300'
+                            : isWorst ? 'bg-rose-950/40 border-rose-900/40 text-rose-400'
+                            : isEliminated ? 'bg-transparent border-white/5 text-slate-600'
+                            : 'bg-white/5 border-white/8 text-slate-300'
+                          }`}>
+                            <span className="text-base">{t.flag}</span>
+                            <div>
+                              <div className={`font-display font-bold ${isEliminated ? 'line-through opacity-50' : ''}`}>{t.name}</div>
+                              <div className="text-[10px] opacity-60">Grp {t.group} · {s.points}pts</div>
+                            </div>
+                            {isChamp && <span className="text-[10px] ml-1">🏆</span>}
+                            {isWorst && <span className="text-[10px] ml-1">🥄</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
+
+      {view === 'groups' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {groups.map((g) => {
           const gTeams = teams.filter(t => t.group === g);
           // Sort teams inside group table based on current points -> GD -> GF -> rating
@@ -150,7 +222,8 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -347,7 +347,7 @@ export default function App() {
                 <h2 className="text-lg md:text-2xl font-display font-black text-green-400 leading-tight tracking-tight mt-0.5">
                   World Cup Sweepstake
                 </h2>
-                <p className="text-[10px] text-slate-500 mt-1.5 flex flex-wrap gap-x-2">
+                <p className="text-[10px] text-slate-500 mt-1.5 flex flex-wrap gap-x-2 justify-center md:justify-start">
                   <span>🥇 60% Winner</span>
                   <span>🥈 25% Runner-Up</span>
                   <span>🥄 15% Wooden Spoon</span>

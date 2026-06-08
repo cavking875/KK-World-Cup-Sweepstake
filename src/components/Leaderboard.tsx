@@ -238,9 +238,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
                         {index === 0 ? (
                           <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-sm font-display font-bold">1</span>
                         ) : index === 1 ? (
-                          <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-slate-600/30 text-slate-300 border border-slate-600/30 text-sm font-display font-bold">2</span>
-                        ) : index === 2 ? (
-                          <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-amber-900/30 text-amber-600 border border-amber-900/30 text-sm font-display font-bold">3</span>
+                          <span className="inline-flex items-center justify-center h-7 w-7 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 text-sm font-display font-bold">2</span>
+                        ) : holdsWorstTeam ? (
+                          <span className="text-lg leading-none">🥄</span>
                         ) : (
                           <span className="text-slate-500 text-sm font-semibold">{index + 1}</span>
                         )}
