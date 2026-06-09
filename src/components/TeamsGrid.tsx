@@ -7,7 +7,8 @@ interface TeamsGridProps {
 }
 
 export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
-  const { teams, stats, participants, worstTeamId, winnerTeamId, runnerUpTeamId } = state;
+  const { teams, stats, participants, worstTeamId, winnerTeamId, runnerUpTeamId, matches } = state;
+  const tournamentStarted = matches.some(m => m.isPlayed);
   const [view, setView] = useState<'groups' | 'players'>('groups');
 
   const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
@@ -78,7 +79,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
                         const s = getTeamStats(t.id);
                         const isChamp = winnerTeamId === t.id;
                         const isRunnerUp = runnerUpTeamId === t.id;
-                        const isWorst = worstTeamId === t.id;
+                        const isWorst = tournamentStarted && worstTeamId === t.id;
                         const isEliminated = s.stage === 'eliminated';
                         return (
                           <div key={t.id} className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs ${
@@ -151,7 +152,7 @@ export const TeamsGrid: React.FC<TeamsGridProps> = ({ state }) => {
                       const tStats = getTeamStats(team.id);
                       const ownerName = getOwnerName(team.id);
                       const isEliminated = tStats.stage === 'eliminated';
-                      const isSpecificWorst = worstTeamId === team.id;
+                      const isSpecificWorst = tournamentStarted && worstTeamId === team.id;
                       const isWinner = winnerTeamId === team.id;
                       const isRunnerUp = runnerUpTeamId === team.id;
 
