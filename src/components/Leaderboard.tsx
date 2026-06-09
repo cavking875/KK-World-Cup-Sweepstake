@@ -63,6 +63,7 @@ export function getTeamSweepstakeStats(
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
   const { participants, stats, teams, collectiv, winnerTeamId, runnerUpTeamId, worstTeamId } = state;
+  const tournamentStarted = state.matches.some(m => m.isPlayed);
 
   // Let's build rows based on each participant's best-scoring team progress
   const rows: LeaderboardRow[] = participants.map((p) => {
@@ -224,7 +225,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
                 sortedRows.map((row, index) => {
                   const isWinnerPrize = row.status === 'top';
                   const isWorstPrize = row.status === 'worst';
-                  const holdsWorstTeam = worstTeamId && row.teamStatsList.some(t => (t as any).teamId === worstTeamId);
+                  const holdsWorstTeam = tournamentStarted && worstTeamId && row.teamStatsList.some(t => (t as any).teamId === worstTeamId);
 
                   return (
                     <tr
@@ -262,9 +263,9 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
                               {row.teamStatsList.map((t, tid) => {
                                 const isChampTeam = t.stage === 'completed';
                                 const isSpecificWorst = worstTeamId && (t as any).teamId === worstTeamId;
-                                const isBestTeam = (row as any).bestTeamId === (t as any).teamId;
+                                const isBestTeam = tournamentStarted && (row as any).bestTeamId === (t as any).teamId;
                                 return (
-                                  <span key={tid} className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold border ${
+                                  <span key={tid} className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold border ${`
                                     isChampTeam ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
                                     : isSpecificWorst ? 'bg-rose-950/50 border-rose-900/50 text-rose-400'
                                     : t.isEliminated ? 'bg-transparent border-white/5 text-slate-600'
@@ -290,7 +291,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ state }) => {
                             row.teamStatsList.map((t, tid) => {
                               const isChampTeam = t.stage === 'completed';
                               const isSpecificWorst = worstTeamId && (t as any).teamId === worstTeamId;
-                              const isBestTeam = (row as any).bestTeamId === (t as any).teamId;
+                              const isBestTeam = tournamentStarted && (row as any).bestTeamId === (t as any).teamId;
                               return (
                                 <span
                                   key={tid}
