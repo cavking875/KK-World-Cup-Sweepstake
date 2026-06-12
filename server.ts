@@ -24,11 +24,14 @@ const API_TEAM_NAME_MAP: Record<string, string> = {
   "Mexico": "mex",
   "South Africa": "rsa",
   "Korea Republic": "kor",
+  "South Korea": "kor",
+  "Republic of Korea": "kor",
   "Czech Republic": "cze",
   "Czechia": "cze",
   "Canada": "can",
   "Bosnia-Herzegovina": "bih",
   "Bosnia and Herzegovina": "bih",
+  "Bosnia & Herzegovina": "bih",
   "Qatar": "qat",
   "Switzerland": "sui",
   "Brazil": "bra",
@@ -37,6 +40,7 @@ const API_TEAM_NAME_MAP: Record<string, string> = {
   "Scotland": "sco",
   "USA": "usa",
   "United States": "usa",
+  "United States of America": "usa",
   "Paraguay": "par",
   "Australia": "aus",
   "Turkey": "tur",
@@ -46,8 +50,10 @@ const API_TEAM_NAME_MAP: Record<string, string> = {
   "Curacao": "cur",
   "Ivory Coast": "civ",
   "Côte d'Ivoire": "civ",
+  "Cote d'Ivoire": "civ",
   "Ecuador": "ecu",
   "Netherlands": "ned",
+  "Holland": "ned",
   "Japan": "jpn",
   "Sweden": "swe",
   "Tunisia": "tun",
@@ -55,10 +61,13 @@ const API_TEAM_NAME_MAP: Record<string, string> = {
   "Egypt": "egy",
   "Iran": "irn",
   "IR Iran": "irn",
+  "Islamic Republic of Iran": "irn",
   "New Zealand": "nzl",
   "Spain": "esp",
   "Cape Verde": "cpv",
+  "Cabo Verde": "cpv",
   "Saudi Arabia": "ksa",
+  "KSA": "ksa",
   "Uruguay": "uru",
   "France": "fra",
   "Senegal": "sen",
@@ -71,6 +80,8 @@ const API_TEAM_NAME_MAP: Record<string, string> = {
   "Portugal": "por",
   "DR Congo": "cod",
   "Congo DR": "cod",
+  "Democratic Republic of Congo": "cod",
+  "Congo, DR": "cod",
   "Uzbekistan": "uzb",
   "Colombia": "col",
   "England": "eng",
@@ -118,9 +129,17 @@ async function syncLiveScores(): Promise<{ updated: number; message: string }> {
       // Only process finished matches
       if (apiMatch.status !== "FINISHED") continue;
 
-      const homeId = API_TEAM_NAME_MAP[apiMatch.homeTeam?.name];
-      const awayId = API_TEAM_NAME_MAP[apiMatch.awayTeam?.name];
-      if (!homeId || !awayId) continue;
+      const apiHomeName = apiMatch.homeTeam?.name;
+      const apiAwayName = apiMatch.awayTeam?.name;
+      const homeId = API_TEAM_NAME_MAP[apiHomeName];
+      const awayId = API_TEAM_NAME_MAP[apiAwayName];
+
+      if (!homeId || !awayId) {
+        console.warn(`[LiveSync] No mapping for team(s): "${apiHomeName}" (${homeId || 'UNKNOWN'}) vs "${apiAwayName}" (${awayId || 'UNKNOWN'}) - skipping`);
+        continue;
+      }
+
+      console.log(`[LiveSync] Processing FINISHED: ${apiHomeName} vs ${apiAwayName} -> ${homeId} vs ${awayId}`);
 
       const homeScore = apiMatch.score?.fullTime?.home;
       const awayScore = apiMatch.score?.fullTime?.away;
@@ -133,7 +152,17 @@ async function syncLiveScores(): Promise<{ updated: number; message: string }> {
          (m.homeTeamId === awayId && m.awayTeamId === homeId))
       );
 
-      if (!match) continue;
+      if (!match) {
+        const alreadyPlayed = state.matches.find(m =>
+          m.isPlayed &&
+          ((m.homeTeamId === homeId && m.awayTeamId === awayId) ||
+           (m.homeTeamId === awayId && m.awayTeamId === homeId))
+        );
+        if (!alreadyPlayed) {
+          console.warn(`[LiveSync] No sweepstake match found for ${homeId} vs ${awayId} - teams may not be in the draw yet`);
+        }
+        continue;
+      }
 
       // Handle home/away flip if API has teams reversed
       const isFlipped = match.homeTeamId === awayId;

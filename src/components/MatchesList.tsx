@@ -38,6 +38,23 @@ function formatDateToLocal(dateStr: string): string {
   });
 }
 
+function isMatchDatePast(dateStr: string): boolean {
+  const match = dateStr.match(/^(\w{3}) (\d{1,2}) (\w{3}), (\d{2}):(\d{2})$/);
+  if (!match) return false;
+
+  const [, , dayStr, monthStr, hourStr, minStr] = match;
+  const monthIndex = MONTH_MAP[monthStr];
+  if (monthIndex === undefined) return false;
+
+  const day = parseInt(dayStr, 10);
+  const hour = parseInt(hourStr, 10);
+  const min = parseInt(minStr, 10);
+
+  // BST = UTC+1, subtract 1 hour to get UTC
+  const utcDate = new Date(Date.UTC(2026, monthIndex, day, hour - 1, min));
+  return utcDate < new Date();
+}
+
 export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
   const { matches, teams, participants } = state;
   const [selectedStage, setSelectedStage] = useState<'all' | 'groups' | 'knockout' | 'final'>('all');
@@ -117,7 +134,7 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
         {currentLiveMatch && (
             <div className="mt-6 bg-black/30 border border-white/8 rounded-xl p-4">
             <div className="text-center text-[10px] font-display font-bold text-green-400 uppercase tracking-widest mb-1">
-              {currentLiveMatch.isPlayed ? 'Last Played' : 'Up Next'} - {getStageLabel(currentLiveMatch.stage, currentLiveMatch.group)}
+              {currentLiveMatch.isPlayed ? 'Last Played' : currentLiveMatch.date && isMatchDatePast(currentLiveMatch.date) ? 'Awaiting Result' : 'Up Next'} - {getStageLabel(currentLiveMatch.stage, currentLiveMatch.group)}
             </div>
             {currentLiveMatch.date && (
               <div className="text-center text-[11px] text-slate-500 font-semibold mb-3">
@@ -250,9 +267,9 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
                     {getStageLabel(m.stage, m.group)}
                   </span>
                   <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                    m.isPlayed ? 'bg-green-900/30 text-green-500' : 'bg-slate-800 text-slate-500'
+                    m.isPlayed ? 'bg-green-900/30 text-green-500' : m.date && isMatchDatePast(m.date) ? 'bg-amber-900/30 text-amber-400' : 'bg-slate-800 text-slate-500'
                   }`}>
-                    {m.isPlayed ? 'FT' : 'Upcoming'}
+                    {m.isPlayed ? 'FT' : m.date && isMatchDatePast(m.date) ? 'Awaiting Result' : 'Upcoming'}
                   </span>
                 </div>
                 {m.date && (
