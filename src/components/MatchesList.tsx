@@ -6,6 +6,38 @@ interface MatchesListProps {
   state: SweepstakeState;
 }
 
+// Dates are stored as BST (UTC+1) strings, e.g. 'Thu 11 Jun, 20:00'
+// This converts them to the user's local timezone automatically
+const MONTH_MAP: Record<string, number> = {
+  Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+  Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+};
+
+function formatDateToLocal(dateStr: string): string {
+  const match = dateStr.match(/^(\w{3}) (\d{1,2}) (\w{3}), (\d{2}):(\d{2})$/);
+  if (!match) return dateStr;
+
+  const [, , dayStr, monthStr, hourStr, minStr] = match;
+  const monthIndex = MONTH_MAP[monthStr];
+  if (monthIndex === undefined) return dateStr;
+
+  const day = parseInt(dayStr, 10);
+  const hour = parseInt(hourStr, 10);
+  const min = parseInt(minStr, 10);
+
+  // BST = UTC+1, subtract 1 hour to get UTC
+  const utcDate = new Date(Date.UTC(2026, monthIndex, day, hour - 1, min));
+
+  return utcDate.toLocaleString(undefined, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
 export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
   const { matches, teams, participants } = state;
   const [selectedStage, setSelectedStage] = useState<'all' | 'groups' | 'knockout' | 'final'>('all');
@@ -89,7 +121,7 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
             </div>
             {currentLiveMatch.date && (
               <div className="text-center text-[11px] text-slate-500 font-semibold mb-3">
-                {currentLiveMatch.date} BST
+                {formatDateToLocal(currentLiveMatch.date)}
               </div>
             )}
 
@@ -225,7 +257,7 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
                 </div>
                 {m.date && (
                   <div className="text-[10px] text-slate-600 font-semibold mb-3">
-                    {m.date} BST
+                    {formatDateToLocal(m.date)}
                   </div>
                 )}
 
