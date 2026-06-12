@@ -79,6 +79,19 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
     return owner ? owner.name : 'Unassigned';
   };
 
+  // Sort all matches chronologically
+  const sortedMatches = [...matches].sort((a, b) => {
+    const ta = a.date ? getMatchTimestamp(a.date) : Infinity;
+    const tb = b.date ? getMatchTimestamp(b.date) : Infinity;
+    return ta - tb;
+  });
+
+  const unplayedMatches = matches.filter(m => !m.isPlayed);
+  const playedMatches = matches.filter(m => m.isPlayed);
+
+  // Focus match for the top panel - first unplayed in chronological order
+  const currentLiveMatch = sortedMatches.find(m => !m.isPlayed) || sortedMatches[sortedMatches.length - 1];
+
   // Filtration logic (applied to chronologically sorted matches)
   const filteredMatches = sortedMatches.filter((m) => {
     // Stage toggle
@@ -97,19 +110,6 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
 
     return true;
   });
-
-  // Sort all matches chronologically
-  const sortedMatches = [...matches].sort((a, b) => {
-    const ta = a.date ? getMatchTimestamp(a.date) : Infinity;
-    const tb = b.date ? getMatchTimestamp(b.date) : Infinity;
-    return ta - tb;
-  });
-
-  const unplayedMatches = matches.filter(m => !m.isPlayed);
-  const playedMatches = matches.filter(m => m.isPlayed);
-
-  // Focus match for the top panel - first unplayed in chronological order
-  const currentLiveMatch = sortedMatches.find(m => !m.isPlayed) || sortedMatches[sortedMatches.length - 1];
 
   const getStageLabel = (stage: string, group?: string) => {
     if (stage === 'groups') return `Group Stage - Group ${group}`;
