@@ -38,6 +38,16 @@ function formatDateToLocal(dateStr: string): string {
   });
 }
 
+function getMatchTimestamp(dateStr: string): number {
+  const match = dateStr.match(/^(\w{3}) (\d{1,2}) (\w{3}), (\d{2}):(\d{2})$/);
+  if (!match) return Infinity;
+  const [, , dayStr, monthStr, hourStr, minStr] = match;
+  const monthIndex = MONTH_MAP[monthStr];
+  if (monthIndex === undefined) return Infinity;
+  const utcDate = new Date(Date.UTC(2026, monthIndex, parseInt(dayStr, 10), parseInt(hourStr, 10) - 1, parseInt(minStr, 10)));
+  return utcDate.getTime();
+}
+
 function isMatchDatePast(dateStr: string): boolean {
   const match = dateStr.match(/^(\w{3}) (\d{1,2}) (\w{3}), (\d{2}):(\d{2})$/);
   if (!match) return false;
@@ -69,8 +79,8 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
     return owner ? owner.name : 'Unassigned';
   };
 
-  // Filtration logic
-  const filteredMatches = matches.filter((m) => {
+  // Filtration logic (applied to chronologically sorted matches)
+  const filteredMatches = sortedMatches.filter((m) => {
     // Stage toggle
     if (selectedStage === 'groups' && m.stage !== 'groups') return false;
     if (selectedStage === 'knockout' && m.stage === 'groups') return false;
@@ -88,11 +98,18 @@ export const MatchesList: React.FC<MatchesListProps> = ({ state }) => {
     return true;
   });
 
+  // Sort all matches chronologically
+  const sortedMatches = [...matches].sort((a, b) => {
+    const ta = a.date ? getMatchTimestamp(a.date) : Infinity;
+    const tb = b.date ? getMatchTimestamp(b.date) : Infinity;
+    return ta - tb;
+  });
+
   const unplayedMatches = matches.filter(m => !m.isPlayed);
   const playedMatches = matches.filter(m => m.isPlayed);
 
-  // Focus match for the top panel (live simulated broadcast)
-  const currentLiveMatch = matches.find(m => !m.isPlayed) || matches[matches.length - 1];
+  // Focus match for the top panel - first unplayed in chronological order
+  const currentLiveMatch = sortedMatches.find(m => !m.isPlayed) || sortedMatches[sortedMatches.length - 1];
 
   const getStageLabel = (stage: string, group?: string) => {
     if (stage === 'groups') return `Group Stage - Group ${group}`;
